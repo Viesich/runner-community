@@ -2,7 +2,7 @@ from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.db import models
 
 
-class RunnerUser(AbstractUser):
+class Runner(AbstractUser):
     date_of_birth = models.DateField(null=True, blank=True)
     gender = models.CharField(
         max_length=10,
@@ -32,7 +32,7 @@ class Event(models.Model):
 
 class Result(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    runner = models.ForeignKey(RunnerUser, on_delete=models.CASCADE)
+    runner = models.ForeignKey(Runner, on_delete=models.CASCADE)
     time = models.DateTimeField()
     position = models.IntegerField()
 
@@ -60,7 +60,7 @@ class EventRegistration(models.Model):
     ]
 
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    user = models.ForeignKey(RunnerUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(Runner, on_delete=models.CASCADE)
     registration_date = models.DateTimeField(auto_now_add=True)
     distance = models.IntegerField()
     status = models.CharField(max_length=100, choices=[("Registered", "Registered"), ("Canceled", "Canceled")])
