@@ -7,11 +7,17 @@ class UserRunner(AbstractUser):
 
 
 class Event(models.Model):
+    EVENT_TYPE_CHOICES = [
+        ('Running', 'Running'),
+        ('Cycling', 'Cycling'),
+        ('Swimming', 'Swimming'),
+    ]
+
     name = models.CharField(max_length=100)
     date = models.DateTimeField()
     location = models.CharField(max_length=100)
     description = models.TextField()
-    event_type = models.CharField(max_length=100)
+    event_type = models.CharField(max_length=100, choices=EVENT_TYPE_CHOICES)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
@@ -29,9 +35,28 @@ class Result(models.Model):
 
 
 class EventRegistration(models.Model):
+    DISTANCE_CHOICES_RUNNING = [
+        (5, '5 km'),
+        (10, '10 km'),
+        (21, '21 km'),
+        (42, '42 km'),
+    ]
+    DISTANCE_CHOICES_CYCLING = [
+        (50, '50 km'),
+        (100, '100 km'),
+        (200, '200 km'),
+    ]
+    DISTANCE_CHOICES_SWIMMING = [
+        (1, '1 km'),
+        (2, '2 km'),
+        (5, '5 km'),
+        (10, '10 km'),
+    ]
+
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     user = models.ForeignKey(UserRunner, on_delete=models.CASCADE)
-    registration_date = models.DateTimeField()
+    registration_date = models.DateTimeField(auto_now_add=True)
+    distance = models.IntegerField()
     status = models.CharField(max_length=100, choices=[("Registered", "Registered"), ("Canceled", "Canceled")])
 
     def __str__(self):
@@ -43,3 +68,18 @@ class EventRegistration(models.Model):
 
     def is_active(self):
         return self.status == "Registered"
+
+    def get_distance_choices(self):
+        if self.event.event_type == 'Running':
+            return self.DISTANCE_CHOICES_RUNNING
+        elif self.event.event_type == 'Cycling':
+            return self.DISTANCE_CHOICES_CYCLING
+        elif self.event.event_type == 'Swimming':
+            return self.DISTANCE_CHOICES_SWIMMING
+        else:
+            return []
+
+    def save(self, *args, **kwargs):
+        if self.distance not in [choice[0] for choice in self.get_distance_choices()]:
+            raise ValueError("Invalid distance for the event type")
+        super().save(*args, **kwargs)
