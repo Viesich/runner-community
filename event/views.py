@@ -1,3 +1,6 @@
+from datetime import datetime
+
+from django.db.models import Count
 from django.shortcuts import render
 from django.views import generic
 
@@ -12,21 +15,29 @@ def index(request):
     return render(request, 'event/index.html', context)
 
 
+class EventListView(generic.ListView):
+    model = Event
+    context_object_name = 'events'
+    template_name = 'event/event_list.html'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return Event.objects.annotate(participant_count=Count('events')).order_by('-date').distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['event_type'] = 'All Events'
+        return context
+
+
 class RunnerListView(generic.ListView):
-    pass
-    # model = Runner
-    # paginate_by = 10
-    # template_name = 'runner_list.html'
-    # context_object_name = 'registrations'
-    #
-    # def get_queryset(self):
-    #     event_id = self.kwargs['event_id']
-    #     return EventRegistration.objects.filter(event_id=event_id)
-    #
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['event'] = get_object_or_404(Event, id=self.kwargs['event_id'])
-    #     return context
+    model = EventRegistration
+    template_name = 'event/runner_list.html'
+    context_object_name = 'registrations'
+
+    def get_queryset(self):
+        event_id = self.kwargs.get('event_id')
+        return EventRegistration.objects.filter(event_id=event_id)
 
 
 class RunnerDetailView(generic.DetailView):

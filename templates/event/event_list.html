@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ event_type }} List</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Name race</th>
+            <th>Location</th>
+            <th>Description</th>
+            <th>Participants</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for event in events %}
+        <tr>
+            <td>{{ event.date }}</td>
+            <td>{{ event.name }}</td>
+            <td>{{ event.location }}</td>
+            <td>{{ event.description }}</td>
+            <td><a href="{% url 'event:runner-add' %}">join to {{ event.participant_count }}</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

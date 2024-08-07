@@ -1,6 +1,7 @@
 from django.urls import path
 from event.views import (
     index,
+    EventListView,
     RunnerListView,
     RunnerDetailView,
     RunnerCreateView,
@@ -10,6 +11,8 @@ app_name = "event"
 
 urlpatterns = [
     path("", index, name="index"),
+    path("events/", EventListView.as_view(), name='event-list'),
+    path("events/", EventListView.as_view(), name='event-list'),
     path("events/<int:event_id>/runners/", RunnerListView.as_view(), name='runner-list'),
     path('users/<int:pk>/', RunnerDetailView.as_view(), name='runner-detail'),
     path('users/add/', RunnerCreateView.as_view(), name='runner-add'),
