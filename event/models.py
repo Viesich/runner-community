@@ -31,8 +31,8 @@ class Event(models.Model):
 
 
 class Result(models.Model):
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    runner = models.ForeignKey(Runner, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='results')
+    runner = models.ForeignKey(Runner, on_delete=models.CASCADE, related_name='results')
     time = models.DateTimeField()
     position = models.IntegerField()
 
@@ -59,8 +59,8 @@ class EventRegistration(models.Model):
         (10, '10 km'),
     ]
 
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    user = models.ForeignKey(Runner, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='events')
+    user = models.ForeignKey(Runner, on_delete=models.CASCADE, related_name='users')
     registration_date = models.DateTimeField(auto_now_add=True)
     distance = models.IntegerField()
     status = models.CharField(max_length=100, choices=[("Registered", "Registered"), ("Canceled", "Canceled")])
