@@ -29,5 +29,12 @@ class RunnerListView(generic.ListView):
     #     return context
 
 
-class DriverDetailView(generic.DetailView):
+class RunnerDetailView(generic.DetailView):
     model = Runner
+
+
+class RunnerCreateView(generic.CreateView):
+    model = Runner
+    template_name = "event/runner_form.html"
+    fields = "__all__"
+
