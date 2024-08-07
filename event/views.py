@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views import generic
 
-from event.models import Event, Runner
+from event.models import Event, Runner, EventRegistration
 
 
 def index(request):
@@ -13,11 +13,21 @@ def index(request):
 
 
 class RunnerListView(generic.ListView):
+    pass
+    # model = Runner
+    # paginate_by = 10
+    # template_name = 'runner_list.html'
+    # context_object_name = 'registrations'
+    #
+    # def get_queryset(self):
+    #     event_id = self.kwargs['event_id']
+    #     return EventRegistration.objects.filter(event_id=event_id)
+    #
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['event'] = get_object_or_404(Event, id=self.kwargs['event_id'])
+    #     return context
+
+
+class DriverDetailView(generic.DetailView):
     model = Runner
-    paginate_by = 10
-
-#
-# class DriverDetailView(generic.DetailView):
-#     model = RunnerUser
-
-

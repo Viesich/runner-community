@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Runner</h1>
+<p>{{ object.first_name }} {{ object.last_name }} ({{ object.username }})</p>
+<p> {{ object.date_of_birth }}</p>
+<p>Mobile: {{ object.phone_number }}</p>
+{% endblock %}
