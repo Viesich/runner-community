@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .event {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .event h2 {
+            margin-top: 0;
+        }
+        .registration {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .registration li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Upcoming Events</h1>
+    {% for event in events %}
+        <div class="event">
+            <h2>{{ event.name }}</h2>
+            <p><strong>Date:</strong> {{ event.date }}</p>
+            <p><strong>Location:</strong> {{ event.location }}</p>
+            <p><strong>Description:</strong> {{ event.description }}</p>
+            <p><strong>Type:</strong> {{ event.event_type }}</p>
+            <p><strong>Status:</strong> {{ event.is_active|yesno:"Active,Inactive" }}</p>
+            <h3>Registered Users</h3>
+            <ul class="registration">
+                {% for registration in event.eventregistration_set.all %}
+                    {% if registration.is_active %}
+                        <li>{{ registration.user.username }} - Distance: {{ registration.distance }} km - Status: {{ registration.status }}</li>
+                    {% endif %}
+                {% empty %}
+                    <li>No registered users</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endfor %}
+</body>
+</html>
